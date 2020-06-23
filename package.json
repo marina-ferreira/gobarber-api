@@ -5,7 +5,7 @@
   "author": "Marina Ferreira <marina.ferreira.dev@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "dev:server": "ts-node-dev --transpileOnly --ignore-watch node_modules src/server.ts",
+    "dev:server": "ts-node-dev --inspect --transpileOnly --ignore-watch node_modules src/server.ts",
     "build": "tsc"
   },
   "dependencies": {
