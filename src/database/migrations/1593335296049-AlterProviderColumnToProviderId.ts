@@ -24,8 +24,8 @@ export class AlterProviderColumnToProviderId1593335296049 implements MigrationIn
     await queryRunner.dropColumn('appointments', 'provider_id')
 
     await queryRunner.addColumn('appointments', new TableColumn({
-      name: 'provider_id',
-      type: 'uuid',
+      name: 'provider',
+      type: 'varchar',
     }))
   }
 }
