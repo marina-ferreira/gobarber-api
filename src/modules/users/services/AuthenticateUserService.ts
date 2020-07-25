@@ -12,7 +12,7 @@ interface Request {
 }
 
 interface Response {
-  user: User,
+  user: User
   token: string
 }
 
@@ -23,11 +23,13 @@ class AuthenticateUserService {
       where: { email }
     })
 
-    if (!user) throw new AppError('Incorrect email or password combination', 401)
+    if (!user)
+      throw new AppError('Incorrect email or password combination', 401)
 
     const isPasswordMatch = await compare(password, user.password)
 
-    if (!isPasswordMatch) throw new AppError('Incorrect email or password combination', 401)
+    if (!isPasswordMatch)
+      throw new AppError('Incorrect email or password combination', 401)
 
     const { secret, expiresIn } = authConfig.jwt
 

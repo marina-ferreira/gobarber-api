@@ -6,15 +6,20 @@ import AppointmentRepository from '../repositories/AppointmentRepository'
 import AppError from '../../../shared/errors/AppError'
 
 interface Request {
-  provider_id: string,
+  provider_id: string
   date: Date
 }
 
 class CreateAppointmentService {
-  public async execute({ provider_id, date }: Request): Promise<Appointment> {
+  public static async execute({
+    provider_id,
+    date
+  }: Request): Promise<Appointment> {
     const appointmentRepository = getCustomRepository(AppointmentRepository)
     const appointmentDate = startOfHour(date)
-    const findAppointment = await appointmentRepository.findByDate(appointmentDate)
+    const findAppointment = await appointmentRepository.findByDate(
+      appointmentDate
+    )
 
     if (findAppointment) {
       throw new AppError('This appointment is already booked.')
