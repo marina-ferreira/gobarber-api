@@ -3,7 +3,7 @@ import fs from 'fs'
 import { getRepository } from 'typeorm'
 
 import uploadConfig from '../../../config/upload'
-import AppError from '../../../errors/AppError'
+import AppError from '../../../shared/errors/AppError'
 import User from '../models/User'
 
 interface Request {
