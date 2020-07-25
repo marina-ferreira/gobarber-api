@@ -21,6 +21,9 @@ module.exports = {
   rules: {
     'prettier/prettier': 'error',
     'camelcase': 'off',
+    'class-methods-use-this': 'off',
+    'import/prefer-default-export': 'off',
+    '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
     'import/extensions': [
       'error',
       'ignorePackages',
