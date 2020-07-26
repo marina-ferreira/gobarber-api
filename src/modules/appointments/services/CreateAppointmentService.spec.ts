@@ -26,17 +26,11 @@ describe('CreateAppointmentService', () => {
     )
 
     const appointmentDate = new Date()
-
-    await createAppointmentService.execute({
-      date: appointmentDate,
-      provider_id: '1234567'
-    })
+    const appointmentParams = { date: appointmentDate, provider_id: '1234567' }
+    await createAppointmentService.execute(appointmentParams)
 
     expect(
-      createAppointmentService.execute({
-        date: appointmentDate,
-        provider_id: '7654321'
-      })
+      createAppointmentService.execute(appointmentParams)
     ).rejects.toBeInstanceOf(AppError)
   })
 })
