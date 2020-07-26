@@ -24,6 +24,7 @@ module.exports = {
     'camelcase': 'off',
     'class-methods-use-this': 'off',
     'no-useless-constructor': 'off',
+    'no-empty': 'off',
     'import/prefer-default-export': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
     '@typescript-eslint/naming-convention': [
