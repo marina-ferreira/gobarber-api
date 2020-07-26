@@ -1,23 +1,23 @@
 import path from 'path'
 import fs from 'fs'
-import { getRepository } from 'typeorm'
 
 import uploadConfig from '@config/upload'
 import AppError from '@shared/errors/AppError'
 import User from '@modules/users/infra/typeorm/models/User'
+import IUsersRepository from '@modules/users/repositories/IUsersRepository'
 
-interface Request {
+interface IRequest {
   user_id: string
   avatarFileName: string
 }
 
 class UpdateUserAvatarService {
-  public async execute({ user_id, avatarFileName }: Request): Promise<User> {
-    const usersRepository = getRepository(User)
-    const user = await usersRepository.findOne(user_id)
+  constructor(private usersRepository: IUsersRepository) {}
 
-    if (!user)
-      throw new AppError('Only authenticated users can change avatar', 401)
+  public async execute({ user_id, avatarFileName }: IRequest): Promise<User> {
+    const user = await this.usersRepository.findById(user_id)
+    const errorMessage = 'Only authenticated users can change avatar'
+    if (!user) throw new AppError(errorMessage, 401)
 
     if (user.avatar) {
       const userAvatarFilePath = path.join(uploadConfig.directory, user.avatar)
@@ -29,7 +29,7 @@ class UpdateUserAvatarService {
     }
 
     user.avatar = avatarFileName
-    await usersRepository.save(user)
+    await this.usersRepository.save(user)
 
     return user
   }

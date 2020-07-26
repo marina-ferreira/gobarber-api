@@ -10,7 +10,7 @@ interface IRequest {
 }
 
 class CreateAppointmentService {
-  constructor(private appointmentRepository: ICreateAppointmentDTO) { }
+  constructor(private appointmentRepository: ICreateAppointmentDTO) {}
 
   public async execute({ provider_id, date }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date)
