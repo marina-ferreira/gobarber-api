@@ -3,9 +3,15 @@ const { compilerOptions } = require('./tsconfig.json')
 
 module.exports = {
   clearMocks: true,
-  coverageProvider: "v8",
+  collectCoverage: true,
+  collectCoverageFrom: [
+    '<rootDir>/src/modules/**/services/*.ts'
+  ],
+  coverageDirectory: 'coverage',
+  coverageProvider: 'v8',
+  coverageReporters: ['text-summary', 'lcov'],
   moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, { prefix: '<rootDir>/src/' }),
   preset: 'ts-jest',
-  testEnvironment: "node",
-  testMatch: ["**/*.spec.ts"]
+  testEnvironment: 'node',
+  testMatch: ['**/*.spec.ts']
 }
