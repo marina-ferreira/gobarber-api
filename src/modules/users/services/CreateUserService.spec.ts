@@ -1,11 +1,16 @@
 import FakeUsersRepository from '@modules/users/repositories/fake/FakeUsersRepository'
+import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakHashProvider'
 import AppError from '@shared/errors/AppError'
 import CreateUserService from './CreateUserService'
 
 describe('CreateUserService', () => {
   it('creates a new user', async () => {
     const fakeUsersRepository = new FakeUsersRepository()
-    const createUserService = new CreateUserService(fakeUsersRepository)
+    const fakeHashProvider = new FakeHashProvider()
+    const createUserService = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider
+    )
     const email = 'user@email.com'
 
     const user = await createUserService.execute({
@@ -20,7 +25,11 @@ describe('CreateUserService', () => {
 
   it('creates a new user with if email is already taken', async () => {
     const fakeUsersRepository = new FakeUsersRepository()
-    const createUserService = new CreateUserService(fakeUsersRepository)
+    const fakeHashProvider = new FakeHashProvider()
+    const createUserService = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider
+    )
     const userParams = {
       email: 'user@email.com',
       name: 'Test User',

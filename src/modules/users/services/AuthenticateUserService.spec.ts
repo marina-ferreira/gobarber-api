@@ -1,4 +1,5 @@
 import FakeUsersRepository from '@modules/users/repositories/fake/FakeUsersRepository'
+import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakHashProvider'
 import AppError from '@shared/errors/AppError'
 import AuthenticateUserService from './AuthenticateUserService'
 import CreateUserService from './CreateUserService'
@@ -6,9 +7,14 @@ import CreateUserService from './CreateUserService'
 describe('AuthenticateUserService', () => {
   it('authenticates user', async () => {
     const fakeUsersRepository = new FakeUsersRepository()
-    const createUserService = new CreateUserService(fakeUsersRepository)
+    const fakeHashProvider = new FakeHashProvider()
+    const createUserService = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider
+    )
     const authenticateUserService = new AuthenticateUserService(
-      fakeUsersRepository
+      fakeUsersRepository,
+      fakeHashProvider
     )
     const params = {
       name: 'Test User',
@@ -16,7 +22,7 @@ describe('AuthenticateUserService', () => {
       password: '123456'
     }
 
-    await createUserService.execute(params)
+    const user = await createUserService.execute(params)
 
     const response = await authenticateUserService.execute({
       email: params.email,
@@ -24,25 +30,20 @@ describe('AuthenticateUserService', () => {
     })
 
     expect(response).toHaveProperty('token')
+    expect(response.user).toEqual(user)
   })
 
   it('does not authenticate non existent user', async () => {
     const fakeUsersRepository = new FakeUsersRepository()
-    const createUserService = new CreateUserService(fakeUsersRepository)
+    const fakeHashProvider = new FakeHashProvider()
     const authenticateUserService = new AuthenticateUserService(
-      fakeUsersRepository
+      fakeUsersRepository,
+      fakeHashProvider
     )
-    const params = {
-      name: 'Test User',
-      email: 'user@email.com',
-      password: '123456'
-    }
-
-    await createUserService.execute(params)
 
     expect(
       authenticateUserService.execute({
-        email: 'other_user@email.com',
+        email: 'nonexistent@email.com',
         password: '123456'
       })
     ).rejects.toBeInstanceOf(AppError)
@@ -50,9 +51,14 @@ describe('AuthenticateUserService', () => {
 
   it('does not authenticate user when password do not match', async () => {
     const fakeUsersRepository = new FakeUsersRepository()
-    const createUserService = new CreateUserService(fakeUsersRepository)
+    const fakeHashProvider = new FakeHashProvider()
+    const createUserService = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider
+    )
     const authenticateUserService = new AuthenticateUserService(
-      fakeUsersRepository
+      fakeUsersRepository,
+      fakeHashProvider
     )
     const params = {
       name: 'Test User',
