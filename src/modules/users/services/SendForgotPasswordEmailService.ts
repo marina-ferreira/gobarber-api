@@ -26,9 +26,12 @@ class SendForgotPasswordEmailService {
     const user = await this.usersRepository.findByEmail(email)
     if (!user) throw new AppError('User not found')
 
-    await this.userTokensRepository.generate(user.id)
+    const { token } = await this.userTokensRepository.generate(user.id)
 
-    await this.mailProvider.sendMail(email, 'Forgot password')
+    await this.mailProvider.sendMail(
+      email,
+      `You've recently asked to reset the password for this GoBarber account: ${token}`
+    )
   }
 }
 

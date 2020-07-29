@@ -21,12 +21,15 @@ class EtherealMailProvider implements IMailProvider {
   }
 
   public async sendMail(to: string, body: string): Promise<void> {
-    await this.client.sendMail({
+    const message = await this.client.sendMail({
       from: 'GoBarber <hello@gobarber.com>',
       to,
       subject: 'Reset Password',
       text: body
     })
+
+    /* eslint-disable-next-line */
+    console.log('Ethereal message:', nodemailer.getTestMessageUrl(message))
   }
 }
 
