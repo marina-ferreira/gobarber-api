@@ -1,5 +1,6 @@
 import FakeUsersRepository from '@modules/users/repositories/fake/FakeUsersRepository'
 import FakeUserTokensRepository from '@modules/users/repositories/fake/FakeUserTokensRepository'
+import FakeHashProvider from '@modules/users/providers/HashProvider/fakes/FakeHashProvider'
 
 import AppError from '@shared/errors/AppError'
 import ResetPasswordService from './ResetPasswordService'
@@ -7,18 +8,23 @@ import ResetPasswordService from './ResetPasswordService'
 let fakeUsersRepository: FakeUsersRepository
 let fakeUserTokensRepository: FakeUserTokensRepository
 let resetPasswordService: ResetPasswordService
+let fakeHashProvider: FakeHashProvider
 
 describe('ResetPasswordService', () => {
   beforeEach(() => {
     fakeUsersRepository = new FakeUsersRepository()
     fakeUserTokensRepository = new FakeUserTokensRepository()
+    fakeHashProvider = new FakeHashProvider()
     resetPasswordService = new ResetPasswordService(
       fakeUsersRepository,
-      fakeUserTokensRepository
+      fakeUserTokensRepository,
+      fakeHashProvider
     )
   })
 
   it('resets password', async () => {
+    const generateHash = jest.spyOn(fakeHashProvider, 'generateHash')
+
     const email = 'user@email.com'
     const newPassword = 'new pass'
     const user = await fakeUsersRepository.create({
@@ -32,6 +38,7 @@ describe('ResetPasswordService', () => {
 
     const updatedUser = await fakeUsersRepository.findById(user.id)
 
-    expect(updatedUser?.password).toEqual(newPassword)
+    expect(generateHash).toHaveBeenCalledWith(newPassword)
+    expect(updatedUser?.password).toBe(newPassword)
   })
 })

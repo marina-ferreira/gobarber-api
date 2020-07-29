@@ -4,6 +4,7 @@ import AppError from '@shared/errors/AppError'
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
 import IUserTokensRepository from '@modules/users/repositories/IUserTokensRepository'
 import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider'
+import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider'
 
 interface IRequest {
   token: string
@@ -17,7 +18,10 @@ class ResetPasswordService {
     private usersRepository: IUsersRepository,
 
     @inject('UserTokensRepository')
-    private userTokensRepository: IUserTokensRepository
+    private userTokensRepository: IUserTokensRepository,
+
+    @inject('HashProvider')
+    private hashProvider: IHashProvider
   ) {}
 
   public async execute({ token, password }: IRequest): Promise<void> {
@@ -27,7 +31,7 @@ class ResetPasswordService {
     const user = await this.usersRepository.findById(userToken.user_id)
     if (!user) throw new AppError('User not found')
 
-    user.password = password
+    user.password = await this.hashProvider.generateHash(password)
     await this.usersRepository.save(user)
   }
 }
