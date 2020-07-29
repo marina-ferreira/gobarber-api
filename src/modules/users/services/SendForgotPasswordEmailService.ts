@@ -24,12 +24,11 @@ class SendForgotPasswordEmailService {
 
   public async execute({ email }: IRequest): Promise<void> {
     const user = await this.usersRepository.findByEmail(email)
-
     if (!user) throw new AppError('User not found')
 
     await this.userTokensRepository.generate(user.id)
 
-    this.mailProvider.sendMail(email, 'Forgot password')
+    await this.mailProvider.sendMail(email, 'Forgot password')
   }
 }
 
