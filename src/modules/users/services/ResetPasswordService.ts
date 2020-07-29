@@ -1,9 +1,9 @@
 import { injectable, inject } from 'tsyringe'
+import { differenceInHours } from 'date-fns'
 
 import AppError from '@shared/errors/AppError'
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
 import IUserTokensRepository from '@modules/users/repositories/IUserTokensRepository'
-import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider'
 import IHashProvider from '@modules/users/providers/HashProvider/models/IHashProvider'
 
 interface IRequest {
@@ -30,6 +30,11 @@ class ResetPasswordService {
 
     const user = await this.usersRepository.findById(userToken.user_id)
     if (!user) throw new AppError('User not found')
+
+    const tokenCreatedAt = userToken.created_at
+    const now = new Date(Date.now())
+    const hasTokenExpired = differenceInHours(now, tokenCreatedAt) > 2
+    if (hasTokenExpired) throw new AppError('Token has expired')
 
     user.password = await this.hashProvider.generateHash(password)
     await this.usersRepository.save(user)
