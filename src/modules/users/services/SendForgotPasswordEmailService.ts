@@ -28,11 +28,22 @@ class SendForgotPasswordEmailService {
 
     const { token } = await this.userTokensRepository.generate(user.id)
 
-    await this.mailProvider.sendMail(
-      email,
-      `You've recently asked to reset the password for this GoBarber account: ${token}`
-    )
+    await this.mailProvider.sendMail({
+      to: {
+        name: user.name,
+        email: user.email
+      },
+      subject: '[GoBarber] Reset your password',
+      templateData: {
+        template: 'Olá {{name}}, {{token}}',
+        variables: {
+          name: user.name,
+          token
+        }
+      }
+    })
   }
 }
 
 export default SendForgotPasswordEmailService
+// `You've recently asked to reset the password for this GoBarber account: ${token}`

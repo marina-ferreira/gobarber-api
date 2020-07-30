@@ -1,11 +1,18 @@
 import nodemailer, { Transporter } from 'nodemailer'
+import { injectable, inject } from 'tsyringe'
+
+import IMailTemplateProvider from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider'
 import IMailProvider from '../models/IMailProvider'
 import ISendMailDTO from '../dtos/ISendMailDTO'
 
+@injectable()
 class EtherealMailProvider implements IMailProvider {
   private client: Transporter
 
-  constructor() {
+  constructor(
+    @inject('MailTemplateProvider')
+    private mailTemplateProvider: IMailTemplateProvider
+  ) {
     nodemailer.createTestAccount().then(account => {
       const transporter = nodemailer.createTransport({
         host: account.smtp.host,
@@ -21,7 +28,12 @@ class EtherealMailProvider implements IMailProvider {
     })
   }
 
-  public async sendMail({ to, from, subject }: ISendMailDTO): Promise<void> {
+  public async sendMail({
+    to,
+    from,
+    subject,
+    templateData
+  }: ISendMailDTO): Promise<void> {
     const message = await this.client.sendMail({
       from: {
         name: from?.name || 'Equipe GoBarber',
@@ -29,7 +41,7 @@ class EtherealMailProvider implements IMailProvider {
       },
       to: { name: to.name, address: to.email },
       subject,
-      text: 'Email test'
+      html: await this.mailTemplateProvider.parse(templateData)
     })
 
     /* eslint-disable-next-line */
