@@ -1,4 +1,5 @@
 import { injectable, inject } from 'tsyringe'
+import path from 'path'
 
 import AppError from '@shared/errors/AppError'
 import IUsersRepository from '@modules/users/repositories/IUsersRepository'
@@ -27,18 +28,21 @@ class SendForgotPasswordEmailService {
     if (!user) throw new AppError('User not found')
 
     const { token } = await this.userTokensRepository.generate(user.id)
+    const mailTemplate = path.resolve(
+      __dirname,
+      '..',
+      'views',
+      'forgot_password.hbs'
+    )
 
     await this.mailProvider.sendMail({
-      to: {
-        name: user.name,
-        email: user.email
-      },
+      to: { name: user.name, email: user.email },
       subject: '[GoBarber] Reset your password',
       templateData: {
-        template: 'Olá {{name}}, {{token}}',
+        file: mailTemplate,
         variables: {
           name: user.name,
-          token
+          link: `http://localhost:4000/reset_password?token=${token}`
         }
       }
     })
@@ -46,4 +50,3 @@ class SendForgotPasswordEmailService {
 }
 
 export default SendForgotPasswordEmailService
-// `You've recently asked to reset the password for this GoBarber account: ${token}`
