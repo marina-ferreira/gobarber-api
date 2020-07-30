@@ -3,14 +3,21 @@ import FakeDiskStorageProvider from '@shared/container/providers/StorageProvider
 import AppError from '@shared/errors/AppError'
 import UpdateUserAvatarService from './UpdateUserAvatarService'
 
+let fakeUsersRepository: FakeUsersRepository
+let fakeStorageProvider: FakeDiskStorageProvider
+let updateUserAvatarService: UpdateUserAvatarService
+
 describe('UpdateUserAvatarService', () => {
-  it('updates user avatar', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeStorageProvider = new FakeDiskStorageProvider()
-    const updateUserAvatarService = new UpdateUserAvatarService(
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository()
+    fakeStorageProvider = new FakeDiskStorageProvider()
+    updateUserAvatarService = new UpdateUserAvatarService(
       fakeUsersRepository,
       fakeStorageProvider
     )
+  })
+
+  it('updates user avatar', async () => {
     const avatarFileName = 'avatar.jpg'
     const user = await fakeUsersRepository.create({
       email: 'user@email.com',
@@ -24,14 +31,7 @@ describe('UpdateUserAvatarService', () => {
   })
 
   it('does not update non existent user avatar', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeStorageProvider = new FakeDiskStorageProvider()
-    const updateUserAvatarService = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider
-    )
-
-    expect(
+    await expect(
       updateUserAvatarService.execute({
         user_id: 'non-existing-user',
         avatarFileName: 'avatar.jpg'
@@ -40,15 +40,7 @@ describe('UpdateUserAvatarService', () => {
   })
 
   it('deletes old avatar before updating', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeStorageProvider = new FakeDiskStorageProvider()
-
     const deleteFile = jest.spyOn(fakeStorageProvider, 'deleteFile')
-
-    const updateUserAvatarService = new UpdateUserAvatarService(
-      fakeUsersRepository,
-      fakeStorageProvider
-    )
     const oldAvatarFileName = 'avatar.jpg'
     const newAvatarFileName = 'new-avatar.jpg'
 

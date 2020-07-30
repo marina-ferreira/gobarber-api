@@ -4,18 +4,25 @@ import AppError from '@shared/errors/AppError'
 import AuthenticateUserService from './AuthenticateUserService'
 import CreateUserService from './CreateUserService'
 
+let fakeUsersRepository: FakeUsersRepository
+let fakeHashProvider: FakeHashProvider
+let createUserService: CreateUserService
+let authenticateUserService: AuthenticateUserService
+
 describe('AuthenticateUserService', () => {
+  beforeEach(() => {
+    fakeUsersRepository = new FakeUsersRepository()
+    fakeHashProvider = new FakeHashProvider()
+    createUserService = new CreateUserService(
+      fakeUsersRepository,
+      fakeHashProvider
+    )
+    authenticateUserService = new AuthenticateUserService(
+      fakeUsersRepository,
+      fakeHashProvider
+    )
+  })
   it('authenticates user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeHashProvider = new FakeHashProvider()
-    const createUserService = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
-    const authenticateUserService = new AuthenticateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
     const params = {
       name: 'Test User',
       email: 'user@email.com',
@@ -34,14 +41,7 @@ describe('AuthenticateUserService', () => {
   })
 
   it('does not authenticate non existent user', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeHashProvider = new FakeHashProvider()
-    const authenticateUserService = new AuthenticateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
-
-    expect(
+    await expect(
       authenticateUserService.execute({
         email: 'nonexistent@email.com',
         password: '123456'
@@ -50,16 +50,6 @@ describe('AuthenticateUserService', () => {
   })
 
   it('does not authenticate user when password do not match', async () => {
-    const fakeUsersRepository = new FakeUsersRepository()
-    const fakeHashProvider = new FakeHashProvider()
-    const createUserService = new CreateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
-    const authenticateUserService = new AuthenticateUserService(
-      fakeUsersRepository,
-      fakeHashProvider
-    )
     const params = {
       name: 'Test User',
       email: 'user@email.com',
@@ -68,7 +58,7 @@ describe('AuthenticateUserService', () => {
 
     await createUserService.execute(params)
 
-    expect(
+    await expect(
       authenticateUserService.execute({
         email: params.email,
         password: 'abcdef'
