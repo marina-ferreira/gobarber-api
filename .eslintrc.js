@@ -25,6 +25,7 @@ module.exports = {
     'class-methods-use-this': 'off',
     'no-useless-constructor': 'off',
     'no-empty': 'off',
+    'no-use-before-define': 'off',
     'import/prefer-default-export': 'off',
     '@typescript-eslint/no-unused-vars': ['error', { 'argsIgnorePattern': '^_' }],
     '@typescript-eslint/naming-convention': [
