@@ -5,6 +5,7 @@ import usersRouter from '@modules/users/infra/http/routes/users.routes'
 import sessionsRouter from '@modules/users/infra/http/routes/sessions.routes'
 import passwordsRouter from '@modules/users/infra/http/routes/passwords.routes'
 import profileRouter from '@modules/users/infra/http/routes/profiles.routes'
+import providerRouter from '@modules/appointments/infra/http/routes/providers.routes'
 
 const routes = Router()
 
@@ -13,5 +14,6 @@ routes.use('/users', usersRouter)
 routes.use('/sessions', sessionsRouter)
 routes.use('/passwords', passwordsRouter)
 routes.use('/profiles', profileRouter)
+routes.use('/providers', providerRouter)
 
 export default routes
