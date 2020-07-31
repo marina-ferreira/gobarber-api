@@ -117,4 +117,14 @@ describe('UpdateProfileService', () => {
       AppError
     )
   })
+
+  it('does not update profile for non existent user id', async () => {
+    await expect(
+      updateProviderService.execute({
+        user_id: 'non-existent-id',
+        name: 'Edited User',
+        email: 'user@email.com'
+      })
+    ).rejects.toBeInstanceOf(AppError)
+  })
 })
