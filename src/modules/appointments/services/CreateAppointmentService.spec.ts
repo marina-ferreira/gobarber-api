@@ -48,17 +48,34 @@ describe('CreateAppointmentService', () => {
     ).rejects.toBeInstanceOf(AppError)
   })
 
-  it('does not create an appointment on the past', async () => {
+  it('does not create an appointment in the past', async () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
       return new Date(2020, 4, 10, 12).getTime()
     })
-    const appointmentDate = new Date(2020, 4, 10, 20)
+    const appointmentDate = new Date(2020, 4, 10, 10)
     const appointmentParams = {
       date: appointmentDate,
       provider_id: '1234567',
       user_id: '7654321'
     }
-    await createAppointmentService.execute(appointmentParams)
+
+    await expect(
+      createAppointmentService.execute(appointmentParams)
+    ).rejects.toBeInstanceOf(AppError)
+  })
+
+  it('does not create an appointment with same user as provider', async () => {
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime()
+    })
+
+    const appointmentDate = new Date(2020, 4, 16, 20)
+    const providerId = '1234567'
+    const appointmentParams = {
+      date: appointmentDate,
+      provider_id: providerId,
+      user_id: providerId
+    }
 
     await expect(
       createAppointmentService.execute(appointmentParams)

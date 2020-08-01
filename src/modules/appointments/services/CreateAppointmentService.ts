@@ -24,16 +24,16 @@ class CreateAppointmentService {
     date
   }: IRequest): Promise<Appointment> {
     const appointmentDate = startOfHour(date)
-    const inPastError = 'You cannot create an appointment on a past date'
-    const alreadyBookedError = 'This appointment is already booked.'
+    const isPastDate = isBefore(appointmentDate, Date.now())
 
-    if (isBefore(appointmentDate, Date.now())) throw new AppError(inPastError)
+    if (isPastDate) throw new AppError(errors.pastDate)
+    if (provider_id === user_id) throw new AppError(errors.invalidUserId)
 
     const findAppointment = await this.appointmentRepository.findByDate(
       appointmentDate
     )
 
-    if (findAppointment) throw new AppError(alreadyBookedError)
+    if (findAppointment) throw new AppError(errors.alreadyBooked)
 
     const appointment = await this.appointmentRepository.create({
       provider_id,
@@ -43,6 +43,12 @@ class CreateAppointmentService {
 
     return appointment
   }
+}
+
+const errors = {
+  pastDate: 'You cannot create an appointment on a past date',
+  alreadyBooked: 'This appointment is already booked',
+  invalidUserId: 'You cannot create an appointment with yourself'
 }
 
 export default CreateAppointmentService
