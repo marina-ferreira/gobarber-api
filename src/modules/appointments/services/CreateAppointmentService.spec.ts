@@ -14,10 +14,14 @@ describe('CreateAppointmentService', () => {
   })
 
   it('creates a new appointment', async () => {
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime()
+    })
+
     const userId = '7654321'
     const providerId = '1234567'
     const appointment = await createAppointmentService.execute({
-      date: new Date(),
+      date: new Date(2020, 4, 10, 13),
       user_id: userId,
       provider_id: providerId
     })
@@ -26,8 +30,29 @@ describe('CreateAppointmentService', () => {
     expect(appointment.provider_id).toBe(providerId)
   })
 
-  it('creates does not create two appointments on the same time', async () => {
-    const appointmentDate = new Date()
+  it('does not create two appointments on the same time', async () => {
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime()
+    })
+
+    const appointmentDate = new Date(2020, 4, 10, 13)
+    const appointmentParams = {
+      date: appointmentDate,
+      provider_id: '1234567',
+      user_id: '7654321'
+    }
+    await createAppointmentService.execute(appointmentParams)
+
+    await expect(
+      createAppointmentService.execute(appointmentParams)
+    ).rejects.toBeInstanceOf(AppError)
+  })
+
+  it('does not create an appointment on the past', async () => {
+    jest.spyOn(Date, 'now').mockImplementationOnce(() => {
+      return new Date(2020, 4, 10, 12).getTime()
+    })
+    const appointmentDate = new Date(2020, 4, 10, 20)
     const appointmentParams = {
       date: appointmentDate,
       provider_id: '1234567',
