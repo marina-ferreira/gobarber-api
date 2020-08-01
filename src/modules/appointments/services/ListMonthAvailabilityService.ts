@@ -2,8 +2,6 @@ import { injectable, inject } from 'tsyringe'
 import { getDaysInMonth, getDate } from 'date-fns'
 
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository'
-import appointmentsRouter from '../infra/http/routes/appointments.routes'
-import Appointment from '../infra/typeorm/models/Appointment'
 
 interface IRequest {
   provider_id: string
