@@ -42,7 +42,7 @@ class SendForgotPasswordEmailService {
         file: mailTemplate,
         variables: {
           name: user.name,
-          link: `http://localhost:4000/reset_password?token=${token}`
+          link: `${process.env.APP_API_URL}/reset_password?token=${token}`
         }
       }
     })

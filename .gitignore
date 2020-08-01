@@ -5,3 +5,6 @@ tmp/*
 
 *.log
 coverage
+
+.env
+ormconfig.json
