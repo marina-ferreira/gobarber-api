@@ -31,7 +31,7 @@ class CreateAppointmentService {
     const isPastDate = isBefore(appointmentDate, Date.now())
     const isBusinessHours =
       getHours(appointmentDate) >= 8 && getHours(appointmentDate) <= 17
-    console.log(date)
+
     if (isPastDate) throw new AppError(errors.pastDate)
     if (provider_id === user_id) throw new AppError(errors.invalidUserId)
     if (!isBusinessHours) throw new AppError(errors.businessHours)

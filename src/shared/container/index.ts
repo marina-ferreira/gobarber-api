@@ -25,12 +25,12 @@ container.registerSingleton<INotificationsRepository>(
   NotificationsRepository
 )
 
-container.registerSingleton<IUserTokensRepository>(
-  'UserTokensRepository',
-  UserTokensRepository
-)
-
 container.registerSingleton<IAppointmentsRepository>(
   'AppointmentsRepository',
   AppointmentsRepository
+)
+
+container.registerSingleton<IUserTokensRepository>(
+  'UserTokensRepository',
+  UserTokensRepository
 )

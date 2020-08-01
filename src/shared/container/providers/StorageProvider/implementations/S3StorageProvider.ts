@@ -4,7 +4,6 @@ import mime from 'mime'
 import aws, { S3 } from 'aws-sdk'
 
 import uploadConfig from '@config/upload'
-import AppError from '@shared/errors/AppError'
 import IStorageProvider from '../models/IStorageProvider'
 
 class S3StorageProvider implements IStorageProvider {
