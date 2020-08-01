@@ -2,6 +2,7 @@ import Redis, { Redis as RedisClient } from 'ioredis'
 
 import cacheConfig from '@config/cache'
 
+import { container } from 'tsyringe'
 import ICacheProvider from '../models/ICacheProvider'
 // import ISendMailDTO from '../dtos/ISendMailDTO'
 
@@ -12,12 +13,16 @@ class RedisCacheProvider implements ICacheProvider {
     this.client = new Redis(cacheConfig.config.redis)
   }
 
-  public async save(key: string, value: string): Promise<void> {
+  public async save(key: string, value: any): Promise<void> { /* eslint-disable-line */
     await this.client.set(key, JSON.stringify(value))
   }
 
-  public async recover(key: string): Promise<string | null> {
-    return this.client.get(key)
+  public async recover<T>(key: string): Promise<T | null> {
+    const data = await this.client.get(key)
+    console.log(data)
+    if (!data) return null
+
+    return JSON.parse(data) as T
   }
 
   public async invalidate(key: string): Promise<void> {}
