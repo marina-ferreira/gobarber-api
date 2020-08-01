@@ -17,6 +17,7 @@ describe('ListMonthAvailabilityService', () => {
     const dayAppointments = appointmentHours.map(hour => {
       const appointmentParams = {
         provider_id: '1',
+        user_id: '7',
         date: new Date(2020, 4, 20, hour, 0, 0)
       }
 
@@ -29,6 +30,7 @@ describe('ListMonthAvailabilityService', () => {
 
     const appointmentParams = {
       provider_id: '1',
+      user_id: '7',
       date: new Date(2020, 4, 21, 10, 0, 0)
     }
 

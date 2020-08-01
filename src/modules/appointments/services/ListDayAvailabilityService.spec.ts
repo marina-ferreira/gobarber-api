@@ -16,10 +16,12 @@ describe('ListDayAvailabilityService', () => {
     const appointmentsParams = [
       {
         provider_id: '1',
+        user_id: '7',
         date: new Date(2020, 4, 20, 14, 0, 0)
       },
       {
         provider_id: '1',
+        user_id: '7',
         date: new Date(2020, 4, 20, 15, 0, 0)
       }
     ]

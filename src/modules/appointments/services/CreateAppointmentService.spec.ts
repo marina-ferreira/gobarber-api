@@ -14,9 +14,11 @@ describe('CreateAppointmentService', () => {
   })
 
   it('creates a new appointment', async () => {
+    const userId = '7654321'
     const providerId = '1234567'
     const appointment = await createAppointmentService.execute({
       date: new Date(),
+      user_id: userId,
       provider_id: providerId
     })
 
@@ -26,7 +28,11 @@ describe('CreateAppointmentService', () => {
 
   it('creates does not create two appointments on the same time', async () => {
     const appointmentDate = new Date()
-    const appointmentParams = { date: appointmentDate, provider_id: '1234567' }
+    const appointmentParams = {
+      date: appointmentDate,
+      provider_id: '1234567',
+      user_id: '7654321'
+    }
     await createAppointmentService.execute(appointmentParams)
 
     await expect(
