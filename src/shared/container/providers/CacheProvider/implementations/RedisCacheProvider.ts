@@ -2,9 +2,7 @@ import Redis, { Redis as RedisClient } from 'ioredis'
 
 import cacheConfig from '@config/cache'
 
-import { container } from 'tsyringe'
 import ICacheProvider from '../models/ICacheProvider'
-// import ISendMailDTO from '../dtos/ISendMailDTO'
 
 class RedisCacheProvider implements ICacheProvider {
   private client: RedisClient
