@@ -3,6 +3,7 @@ import { injectable, inject } from 'tsyringe'
 
 import Appointment from '@modules/appointments/infra/typeorm//models/Appointment'
 import AppError from '@shared/errors/AppError'
+
 import IAppointmentsRepository from '@modules/appointments/repositories/IAppointmentsRepository'
 import INotificationsRepository from '@modules/notifications/repositories/INotificationsRepository'
 import ICacheProvider from '@shared/container/providers/CacheProvider/models/ICacheProvider'
