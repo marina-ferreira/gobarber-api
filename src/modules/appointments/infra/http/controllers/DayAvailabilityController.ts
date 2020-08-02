@@ -10,12 +10,12 @@ class DayAvailabilityController {
     )
 
     const { provider_id } = request.params
-    const { month, year, day } = request.body
+    const { month, year, day } = request.query
     const availability = await listDayAvailabilityService.execute({
       provider_id,
-      month,
-      year,
-      day
+      month: Number(month),
+      year: Number(year),
+      day: Number(day)
     })
 
     return response.json(availability)

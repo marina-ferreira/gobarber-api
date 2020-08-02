@@ -10,11 +10,11 @@ class MonthAvailabilityController {
     )
 
     const { provider_id } = request.params
-    const { month, year } = request.body
+    const { month, year } = request.query
     const availability = await listMonthAvailabilityService.execute({
       provider_id,
-      month,
-      year
+      month: Number(month),
+      year: Number(year)
     })
 
     return response.json(availability)
