@@ -42,7 +42,8 @@ class CreateAppointmentService {
     if (!isBusinessHours) throw new AppError(errors.businessHours)
 
     const findAppointment = await this.appointmentRepository.findByDate(
-      appointmentDate
+      appointmentDate,
+      provider_id
     )
 
     if (findAppointment) throw new AppError(errors.alreadyBooked)
