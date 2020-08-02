@@ -1,5 +1,5 @@
 # GoStack 12
-## Week 3/4 - GoBarber Express API
+## Week 2/4 | GoBarber Express TypeScript API
 
 ```
 POST /appointments
