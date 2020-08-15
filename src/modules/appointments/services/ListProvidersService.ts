@@ -1,4 +1,5 @@
 import { injectable, inject } from 'tsyringe'
+import { classToClass } from 'class-transformer'
 
 import User from '@modules/users/infra/typeorm/models/User'
 
@@ -25,7 +26,7 @@ class ListProvidersService {
 
     if (!providers) {
       providers = await this.usersRepository.findAllProviders(user_id)
-      await this.cacheProvider.save(cacheKey, providers)
+      await this.cacheProvider.save(cacheKey, classToClass(providers))
     }
 
     return providers
